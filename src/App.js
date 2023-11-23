@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Navigation from "./components/Navigation";
 import { RotatingLines } from "react-loader-spinner";
+import axios from "axios";
+import { HfInference } from '@huggingface/inference'
+import { Buffer } from 'buffer';
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -11,8 +14,6 @@ function App() {
   const [isWaiting, setIsWaiting] = useState(false)
   const [message, setMessage] = useState("")
 
-
-
   const submitHandler = async (e) => {
     e.preventDefault()
 
@@ -21,10 +22,10 @@ function App() {
       return
     }
 
-    // setIsWaiting(true)
+    setIsWaiting(true)
 
     // // Call AI API to generate a image based on description
-    // const imageData = await createImage()
+    const imageData = await createImage()
 
     // // Upload image to IPFS (NFT.Storage)
     // const url = await uploadImage(imageData)
@@ -32,8 +33,25 @@ function App() {
     // // Mint NFT
     // await mintImage(url)
 
-    // setIsWaiting(false)
+    setIsWaiting(false)
     // setMessage("")
+  }
+
+  const createImage = async () => {
+    setMessage("Generating Image...")
+
+    const hf = new HfInference(process.env.REACT_APP_HUGGING_FACE_API_KEY);
+    const blob = await hf.textToImage({
+        model: "stabilityai/stable-diffusion-2",
+        inputs: description + 'for profile picture',
+        parameters: {
+            negative_prompt: "blurry, realistic, low quality",
+        },
+    });
+    const windowURL = window.URL || window.webkitURL;
+    const imageUrl = windowURL.createObjectURL(blob);
+    console.log(imageUrl)
+    setImage(imageUrl)
   }
 
   return (

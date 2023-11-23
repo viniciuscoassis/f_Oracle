@@ -10,7 +10,7 @@ const Navigation = ({ account, setAccount }) => {
     return (
         <nav>
             <div className='nav__brand'>
-                <h1>f_oracle pfp generator</h1>
+                <h1>F_oracle Generator</h1>
             </div>
 
             {account ? (
@@ -24,7 +24,7 @@ const Navigation = ({ account, setAccount }) => {
                 <button
                     type="button"
                     className='nav__connect'
-                    onClick={''/*connectHandler*/}
+                    // onClick={connectHandler}
                 >
                     Connect
                 </button>
